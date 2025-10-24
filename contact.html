@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact | ProjectDesk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="web-app-manifest-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="web-app-manifest-512x512.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <a class="logo" href="index.html">
+        <img src="assets/branding/ProjectDesk_logo.png" alt="ProjectDesk" />
+      </a>
+      <nav class="site-nav">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a class="cta" href="https://portal.projectdesk.app">Get Started</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <h1>Contact Us</h1>
+        <p class="section-lead">We are here to help with onboarding, support, or general questions.</p>
+        <div class="contact-form-wrapper">
+          <h2>Send us a message</h2>
+          <p>Fill out the form below and we will be in touch to help you out.</p>
+          <form id="contact-form" class="contact-form" data-endpoint="https://portal.projectdesk.app/pages/pages/api/support/contact">
+            <div class="form-field" data-width="half">
+              <label for="contact-name">Name</label>
+              <input type="text" id="contact-name" name="name" placeholder="Your full name" autocomplete="name" required />
+            </div>
+            <div class="form-field" data-width="half">
+              <label for="contact-email">Email</label>
+              <input type="email" id="contact-email" name="email" placeholder="you@example.com" autocomplete="email" required />
+            </div>
+            <div class="form-field" data-width="half">
+              <label for="contact-type">Type of contact</label>
+              <select id="contact-type" name="type" required>
+                <option value="">Choose an option</option>
+                <option value="Issue">Issue</option>
+                <option value="Bug report">Bug report</option>
+                <option value="Billing query">Billing query</option>
+                <option value="Custom pricing">Custom pricing</option>
+                <option value="Partnership">Partnership</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-field" data-width="wide">
+              <label for="contact-description">Description</label>
+              <textarea id="contact-description" name="description" rows="5" placeholder="How can we help?" required></textarea>
+            </div>
+            <div class="form-field captcha-field" data-width="wide">
+              <label for="contact-captcha">Captcha</label>
+              <div class="captcha-input">
+                <span class="captcha-prompt" id="captcha-prompt"></span>
+                <input type="text" id="contact-captcha" name="captcha" placeholder="Answer" inputmode="numeric" autocomplete="off" required />
+                <button type="button" class="refresh-captcha" id="refresh-captcha" aria-label="Refresh captcha">
+                  <span aria-hidden="true">↻</span>
+                </button>
+              </div>
+            </div>
+            <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+            <button type="submit" class="primary-cta form-submit" data-default-text="Send message">Send message</button>
+          </form>
+        </div>
+        <div class="contact-cta">
+          <h2>Ready to get started?</h2>
+          <p>Sign up in minutes to get started with your first project.</p>
+          <a class="primary-cta" href="https://portal.projectdesk.app">Get Started</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>© <span id="year"></span> ProjectDesk.app All rights reserved.</p>
+      <nav class="footer-nav">
+        <a href="privacy-terms.html">Privacy &amp; Terms</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const yearEl = document.getElementById('year');
+      if (yearEl) {
+        yearEl.textContent = new Date().getFullYear().toString();
+      }
+
+      const form = document.getElementById('contact-form');
+      if (!form) {
+        return;
+      }
+
+      const statusEl = document.getElementById('form-status');
+      const captchaPrompt = document.getElementById('captcha-prompt');
+      const captchaInput = document.getElementById('contact-captcha');
+      const refreshCaptchaBtn = document.getElementById('refresh-captcha');
+      const submitBtn = form.querySelector('.form-submit');
+      const defaultSubmitText = submitBtn?.dataset.defaultText || submitBtn?.textContent || 'Send message';
+      const endpoint = form.dataset.endpoint || (window.ProjectDeskConfig?.contactEndpoint ?? '');
+
+      const ICONS = {
+        success: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" opacity="0.16" d="M12 21.25c-5.11 0-9.25-4.14-9.25-9.25S6.89 2.75 12 2.75 21.25 6.89 21.25 12 17.11 21.25 12 21.25z"></path><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M8.5 12.6l2.3 2.3 4.7-5.4"></path></svg>',
+        error: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" opacity="0.16" d="M12 21.25c-5.11 0-9.25-4.14-9.25-9.25S6.89 2.75 12 2.75 21.25 6.89 21.25 12 17.11 21.25 12 21.25z"></path><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9.4 9.4l5.2 5.2M14.6 9.4l-5.2 5.2"></path></svg>',
+        info: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" opacity="0.16" d="M12 21.25c-5.11 0-9.25-4.14-9.25-9.25S6.89 2.75 12 2.75 21.25 6.89 21.25 12 17.11 21.25 12 21.25z"></path><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 7.5v.1M12 10.5v6"></path></svg>'
+      };
+
+      let captchaSolution = 0;
+      let captchaChallenge = { first: 0, second: 0 };
+
+      function clearStatus() {
+        if (!statusEl) return;
+        statusEl.innerHTML = '';
+        statusEl.className = 'form-status';
+      }
+
+      function showStatus(type, title, detail) {
+        if (!statusEl) return;
+        const icon = ICONS[type] || ICONS.info;
+        const detailHtml = detail ? `<p>${detail}</p>` : '';
+        statusEl.innerHTML = `
+          <span class="form-status-icon">${icon}</span>
+          <div>
+            <strong>${title}</strong>
+            ${detailHtml}
+          </div>
+        `;
+        statusEl.className = `form-status is-visible ${type}`;
+      }
+
+      function setSubmitting(isSubmitting) {
+        if (!submitBtn) return;
+        submitBtn.disabled = isSubmitting;
+        submitBtn.textContent = isSubmitting ? 'Sending…' : defaultSubmitText;
+        form.classList.toggle('is-loading', isSubmitting);
+      }
+
+      function generateCaptcha() {
+        const first = Math.floor(Math.random() * 8) + 2;
+        const second = Math.floor(Math.random() * 8) + 2;
+        captchaSolution = first + second;
+        captchaChallenge = { first, second };
+        if (captchaPrompt) {
+          captchaPrompt.textContent = `${first} + ${second} = ?`;
+        }
+      }
+
+      refreshCaptchaBtn?.addEventListener('click', event => {
+        event.preventDefault();
+        generateCaptcha();
+        if (captchaInput) {
+          captchaInput.value = '';
+          captchaInput.focus();
+        }
+        clearStatus();
+      });
+
+      if (!endpoint) {
+        showStatus('error', 'Support form unavailable', 'We are finalising our support channel. Please check back soon.');
+        form.querySelectorAll('input, select, textarea, button').forEach(el => {
+          el.disabled = true;
+        });
+        return;
+      }
+
+      form.addEventListener('submit', async event => {
+        event.preventDefault();
+        clearStatus();
+
+        if (!form.reportValidity()) {
+          return;
+        }
+
+        const answer = Number(captchaInput?.value.trim());
+        if (Number.isNaN(answer) || answer !== captchaSolution) {
+          showStatus('error', 'Captcha incorrect', 'Please try again so we know you are human.');
+          captchaInput?.focus();
+          generateCaptcha();
+          if (captchaInput) captchaInput.value = '';
+          return;
+        }
+
+        const data = new FormData(form);
+        const type = data.get('type') || 'Contact';
+        const payload = {
+          name: data.get('name'),
+          email: data.get('email'),
+          type,
+          description: data.get('description'),
+          captcha: {
+            answer,
+            first: captchaChallenge.first,
+            second: captchaChallenge.second
+          }
+        };
+
+        try {
+          setSubmitting(true);
+
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`);
+          }
+
+          const result = await response.json().catch(() => ({}));
+          const ticketId = result.ticketId || result.reference || '';
+          const email = payload.email || 'your inbox';
+
+          form.reset();
+          showStatus(
+            'success',
+            'Support ticket sent',
+            ticketId
+              ? `We emailed a confirmation to ${email} with reference ${ticketId}.`
+              : `We emailed a confirmation to ${email}. Thanks for reaching out.`
+          );
+        } catch (error) {
+          console.error('Support form submission failed', error);
+          showStatus(
+            'error',
+            'Unable to send message',
+            'Please try again in a few moments. If the issue persists, contact us through your customer portal.'
+          );
+        } finally {
+          setSubmitting(false);
+          generateCaptcha();
+          if (captchaInput) {
+            captchaInput.value = '';
+          }
+        }
+      });
+
+      generateCaptcha();
+    })();
+  </script>
+</body>
+</html>

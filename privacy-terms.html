@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy & Terms | ProjectDesk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="web-app-manifest-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="web-app-manifest-512x512.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-content">
+      <a class="logo" href="index.html">
+        <img src="assets/branding/ProjectDesk_logo.png" alt="ProjectDesk" />
+      </a>
+      <nav class="site-nav">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a class="cta" href="https://portal.projectdesk.app">Get Started</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <h1>Privacy &amp; Terms</h1>
+        <p class="section-lead">We respect your data and strive for transparency about how ProjectDesk works. Below is a summary of our approach. For detailed policies, contact our team.</p>
+        <h2>Privacy Commitment</h2>
+        <p>We collect only the information needed to deliver and improve ProjectDesk. Your workspace content belongs to you, and we never sell data to third parties. Security safeguards, including encryption and regular audits, protect your information.</p>
+        <h2>Data Usage</h2>
+        <p>We use aggregated analytics to enhance features and ensure reliable uptime. Limited personal information is used for account management, billing, and support communications.</p>
+        <h2>Terms of Service</h2>
+        <p>By using ProjectDesk, you agree to use the platform responsibly and adhere to applicable laws. We grant a non-exclusive license to access ProjectDesk, and we reserve the right to update terms as the product evolves.</p>
+        <p>For the complete policy documents or legal inquiries, please reach out to <a href="mailto:legal@projectdesk.app">legal@projectdesk.app</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>© <span id="year"></span> ProjectDesk. All rights reserved.</p>
+      <nav class="footer-nav">
+        <a href="privacy-terms.html">Privacy &amp; Terms</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    const yearEl = document.getElementById('year');
+    if (yearEl) {
+      yearEl.textContent = new Date().getFullYear().toString();
+    }
+  </script>
+</body>
+</html>
